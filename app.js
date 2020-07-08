@@ -8,9 +8,20 @@ const connection = mysql.createConnection({
   database: 'join_us'
 });
 
-const queryString = "SELECT * FROM users";
-connection.query(queryString, (error, result, fields) => {
+// generate 1k emails
+let data = [];
+for (let i = 0; i < 1000; i++) {
+  data.push([
+    faker.internet.email().toLowerCase(),
+    faker.date.past()
+  ]);
+}
+
+// Insert user data to db 
+let queryString = "INSERT INTO users (email, created_at) VALUES ?";
+connection.query(queryString, [data], (error, result) => {
   if(error) throw error;
-  console.log(`email: ${result[0].email}`)
-});
+  console.log(result);
+})
+
 connection.end();
