@@ -1,6 +1,8 @@
+const express = require('express');
 const mysql = require('mysql');
 const faker = require('faker');
 
+const app = express();
 // DB connection
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -8,20 +10,16 @@ const connection = mysql.createConnection({
   database: 'join_us'
 });
 
-// generate 1k emails
-let data = [];
-for (let i = 0; i < 1000; i++) {
-  data.push([
-    faker.internet.email().toLowerCase(),
-    faker.date.past()
-  ]);
-}
+app.get('/', (req, res) => {
+  // count total mails from db
+  let queryString = "SELECT COUNT(*) as total_count from users";
+  connection.query(queryString, (error, results) => {
+    if(error) throw error;
+    const count = results[0].total_count;
+    res.send(`We have ${count} users in our db`);
+  });
+});
 
-// Insert user data to db 
-let queryString = "INSERT INTO users (email, created_at) VALUES ?";
-connection.query(queryString, [data], (error, result) => {
-  if(error) throw error;
-  console.log(result);
-})
-
-connection.end();
+app.listen(3000, () => {
+  console.log('App listening on port 3000!');
+});
