@@ -1,0 +1,12 @@
+<%- include('./partials/header.ejs') %>
+<h1>Join Us!</h1>
+<p>
+  Enter your mail to join <strong><%= count %></strong> others users on our
+  waitlist
+</p>
+<form action="/leads" method="POST">
+  <input type="email" name="email" id="txtEmail" onkeyup="ValidateEmail();"/>
+  <span id="lblError" style="color: red"></span><br><br>
+  <button type="submit" id="submitBtn" disabled>Join Now!</button>
+</form>
+<%- include('./partials/footer.ejs')%>
